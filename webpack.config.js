@@ -13,7 +13,7 @@ module.exports = {
   plugins:  [
      new HtmlWebpackPlugin({
       template: './src/index.html',
-      inject: true,
+      inject: false,
     }),
     new MiniCssExtractPlugin({filename: "assets/style.min.css", }),   
       ],
@@ -61,7 +61,7 @@ module.exports = {
     publicPath: '/',
      },
   devServer: {    
-    contentBase: path.join(__dirname, 'src'),
+    contentBase: path.join(__dirname, 'src'),    
     watchContentBase: true,
     compress: true,
     host: 'localhost',
