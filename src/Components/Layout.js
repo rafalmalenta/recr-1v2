@@ -2,7 +2,6 @@ import React from "react";
 import CitiesForm from "./CitiesForm";
 import CitiesList from "./CitiesList";
 
-countries = ["Poland","France","Germany","Spain"]
 
 export default class Layout extends React.Component{
     constructor(){
@@ -10,7 +9,7 @@ export default class Layout extends React.Component{
         this.state = {
             inputValue : localStorage.getItem("inputvalue"),
             loaded : false,
-            matchingCountries = ""
+            matchingCountries : ""
         }
     }
     componentDidMount (){

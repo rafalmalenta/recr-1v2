@@ -8,6 +8,7 @@ export default class PollutionRadios extends React.Component{
     render(){
         return(
             <div>
+                <div>Pick pollution type</div>
                 <input id="o3" type="radio" name="pollution" value="o3" /><label for="o3">o3</label>
                 <input id="co2" type="radio" name="pollution" value="co" /> <label for="co2">co2</label>
                 <input id="no2" type="radio" name="pollution" value="no2" /><label for="no2">no2</label>

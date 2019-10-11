@@ -9,12 +9,12 @@ export default class CitiesForm extends React.Component{
     }
     render(){
         return(
-            <div>
+            
                 <form>
                     <AutocompleteInput />
                     <PollutionRadios />
                 </form>
-            </div>
+           
         );
     }
 }
