@@ -11,8 +11,7 @@ export default function(state = [], action) {
         if( countryLowercase.includes(payloadLowercase)){
           state.push(country)
         }
-      })
-    console.log(state)
+      })    
     return state
     }         
       default:

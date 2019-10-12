@@ -1,18 +1,13 @@
 import React from "react";
-import { connect } from "react-redux";
 import  filterCountries  from "../redux/actions/countriesActions"
 
-@connect(store=>{
-    return{
-        countries: store.countries,  
-    }
-})
 export default class AutocompleteInput extends React.Component{
     constructor(){
         super()             
     }
     showMatchingCountries(e){       
-        this.props.dispatch(filterCountries(e.target.value)) ;            
+        this.props.matchCountries(e.target.value);
+        //console.log("input")            
     }
     showAutocompleteList(){
         document.querySelector(".AutocompleteList").style.visibility= "visible";   
@@ -23,17 +18,17 @@ export default class AutocompleteInput extends React.Component{
         },150)       
     } 
     setInput(value){  
-        this.props.dispatch(filterCountries(value))     
+        //this.props.dispatch(filterCountries(value))     
         document.getElementById("autoComplete").value = value;
     }
     render(){
-        
-        let mapedCountries = this.props.countries.map((country,index) => {
+        //console.log(this.props.autocompleteList)
+        let mapedCountries = this.props.autocompleteList.map((country,index) => {
             return <div key = {index} onClick={this.setInput.bind(this,country)} >{country}</div>
         });
        
         return(
-            <div>
+            <section>
                 <label >
                 <div>Select country </div>
                 <input type="text" name="country" id="autoComplete"
@@ -45,7 +40,7 @@ export default class AutocompleteInput extends React.Component{
                 <div class="AutocompleteList">
                     { mapedCountries }
                 </div>
-            </div>
+            </section>
         );
     }
 }
