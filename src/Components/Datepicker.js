@@ -6,22 +6,18 @@ export default class DatePicker extends React.Component{
         super()
     }
     render(){
+        let period = "date_" + this.props.period;
+        console.log(period)
         return(
-            <section>Pick period of time
+            <section class={period}>Pick period of time
                 <label >
                     <div>
-                     date from    
-                    </div>                   
-                <input type="date" name="date_from" id="date_from" />
-                <input type="time" name="time_from" id="time_from" />
+                    {period}   
+                    </div>               
+                <input type="date" name={period} id={period} required/>
+                <input type="time" name="time_from" id="time_from" required/>
                 </label>
-                <label >
-                    <div>
-                    date to
-                    </div>
-                <input type="date" name="date_to" id="date_to" />
-                <input type="time" name="time_to" id="time_to" />
-                </label>
+           
             </section>
         );
     }

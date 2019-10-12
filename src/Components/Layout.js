@@ -17,6 +17,7 @@ export default class Layout extends React.Component{
     }
     
     render(){
+        console.log(this.state.loaded, Date.now())
         let Content;
         if (this.state.loaded){
             Content = <div class="Page"><CitiesForm /> <CitiesList /></div>  

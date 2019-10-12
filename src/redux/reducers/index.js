@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import countries from "./countries";
+import openAPIEndpoint from "./openAPIEndpoint";
 import pollutedCities from "./pollutedCities";
 
-export default combineReducers({ countries, pollutedCities });
+export default combineReducers({ openAPIEndpoint, pollutedCities });

@@ -7,7 +7,7 @@ export default class PollutionRadios extends React.Component{
     }
     render(){
         return(
-            <section >
+            <section class="parameter">
                 <div >Pick pollution type</div>
                 <div class="radioWrapper">
                     <div class="row">
