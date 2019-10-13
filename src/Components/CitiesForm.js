@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import axios from "axios"
 import { getURL } from "../redux/actions/openAPIActions";
 import { arrayContainValue, copyFromArrayIfNotDuplicated } from "../assets/functions";
-import { addCity,resetCity } from "../redux/actions/pollutedCitiesActions";
+import { addCity,resetCity,loaded,loading } from "../redux/actions/pollutedCitiesActions";
 
 
 @connect((store)=>{
@@ -36,8 +36,7 @@ export default class CitiesForm extends React.Component{
             type: "GET",   
             params: { 
                 origin: "*",
-             },
-
+            },
             url: "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&titles="+city,
             success: {
             },
@@ -46,17 +45,24 @@ export default class CitiesForm extends React.Component{
         var singleResponse = response.data.query.pages;
         var pageID = Object.keys(singleResponse)[0];
         var describtion = singleResponse[pageID]["extract"];
+        if(describtion){
+            describtion=describtion
+        }
+        else
+            describtion="no records found on wikipedia"
         let payload = {
             header:city,
             describtion:describtion,
         }       
-        //await this.props.dispatch(addCity(payload))
+        await this.props.dispatch(addCity(payload));
+        
         //console.log(this.props.cities.citiesArray)
     }
 
     async fetchData(event){                
         event.preventDefault();  
-        this.props.dispatch(resetCity())
+        this.props.dispatch(resetCity());
+        this.props.dispatch(loading());
 
         let temporaryArray = []; 
         let citiesArray; 
@@ -71,7 +77,8 @@ export default class CitiesForm extends React.Component{
             while(citiesArray.length < 10);           
             citiesArray.forEach((city)=>{
                 this.fetchDescribtionFromWikipedia(city)
-            })           
+            })
+            this.props.dispatch(loaded())           
         }
     }
     verifyForm(){

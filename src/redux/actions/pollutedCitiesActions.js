@@ -10,3 +10,15 @@ export function resetCity(){
         payload: ""
     }
 }
+export function loading(){
+    return{
+        type: "loading",
+        payload: ""
+    }
+}
+export function loaded(){
+    return{
+        type: "loaded",
+        payload: ""
+    }
+}

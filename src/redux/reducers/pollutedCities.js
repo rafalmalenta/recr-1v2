@@ -1,7 +1,7 @@
 
 const initial ={
-  fetching:"ds",
-  fetched:"as",
+  loading:"ds",
+  loading:"as",
   citiesArray:[],
 };
   
@@ -15,6 +15,12 @@ export default function(state = initial, action) {
     }
     case "resetCity":{
       return {...state, citiesArray:[]}
+    }
+    case "loading":{
+      return {...state, loading:true}      
+    }
+    case "loaded":{
+      return {...state, loading:false, loaded:true}      
     }
     default:
       return state;
