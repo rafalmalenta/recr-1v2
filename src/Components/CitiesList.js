@@ -13,11 +13,15 @@ export default class CitiesList extends React.Component{
     }
     toggleVisibility(e){
         let className = e.target.nextSibling.classList[0];
-        console.log(className)
-        if(className=="hidden")
-        e.target.nextSibling.classList="show";
+        let height = e.target.nextSibling.style.maxHeight
+        console.log(height)
+        if(height == "1222px"){
+            e.target.nextSibling.style.maxHeight="0px";
+        }       
         else
-        e.target.nextSibling.classList="hidden";
+        e.target.nextSibling.style.maxHeight= "1222px"
+        //e.target.nextSibling.classList="hidden";
+        e.target.nextSibling.style.backgroundColor="red"
         // e.target.nextSibling
          console.log(e.target)
     }
@@ -31,8 +35,8 @@ export default class CitiesList extends React.Component{
             display=this.props.cities.citiesArray.map((city,index)=>
 
                 <section class="accordion" key={index}>
-                <h2 onClick={()=>this.toggleVisibility(event)} >{city.header}</h2>
-                <div class="hidden">
+                <h1 onClick={()=>this.toggleVisibility(event)} >{city.header}</h1>
+                <div >
                     {city.describtion}
                 </div>
                 </section>
