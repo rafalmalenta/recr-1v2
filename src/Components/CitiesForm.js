@@ -5,12 +5,14 @@ import DatePicker from "./Datepicker";
 import { connect } from "react-redux";
 import axios from "axios"
 import { getURL } from "../redux/actions/openAPIActions";
-import { arrayContainValue } from "../assets/functions"
-import { async } from "q";
+import { arrayContainValue, copyFromArrayIfNotDuplicated } from "../assets/functions";
+import { addCity,resetCity } from "../redux/actions/pollutedCitiesActions";
+
 
 @connect((store)=>{
     return{        
-        openAPIEndpoint: store.openAPIEndpoint
+        openAPIEndpoint: store.openAPIEndpoint,
+        cities: store.pollutedCities,
     }
 })
 export default class CitiesForm extends React.Component{
@@ -20,35 +22,56 @@ export default class CitiesForm extends React.Component{
     async fetchCities(URL,arrayToReturn){
         console.log(URL)
         try {let res = await axios.get(URL)            
-                if(res.status == 200){                   
-                     res.data.results.some(city=>{
-                        if(!arrayContainValue(arrayToReturn,city.city) && (arrayToReturn.length < 10))
-                            arrayToReturn.push(city.city) 
-                            //console.log(city.city)  
-                     })
+                if(res.status == 200 && res.data.meta.found !== 0){ 
+                    arrayToReturn = copyFromArrayIfNotDuplicated(res.data.results,arrayToReturn)                 
                 }
-                else throw new Error("failed to load resource")
+                else throw "failed to load resource"
             return await arrayToReturn;          
         }
         catch(e){return await false}
         finally{}   
     }
+    async fetchDescribtionFromWikipedia(city){        
+        let response = await axios({
+            type: "GET",   
+            params: { 
+                origin: "*",
+             },
+
+            url: "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&titles="+city,
+            success: {
+            },
+            error: "",        
+        })
+        var singleResponse = response.data.query.pages;
+        var pageID = Object.keys(singleResponse)[0];
+        var describtion = singleResponse[pageID]["extract"];
+        let payload = {
+            header:city,
+            describtion:describtion,
+        }       
+        //await this.props.dispatch(addCity(payload))
+        //console.log(this.props.cities.citiesArray)
+    }
 
     async fetchData(event){                
         event.preventDefault();  
-        let cityarray = []; 
-        let xax=[];
+        this.props.dispatch(resetCity())
+
+        let temporaryArray = []; 
+        let citiesArray; 
         let page = 1;         
         if(this.verifyForm()){
             await this.props.dispatch(getURL());
+            //loop incase 1request didnt contain 10 unique citis
             do{
-                cityarray = await this.fetchCities(`${this.props.openAPIEndpoint.fullURL}page=${page}`, cityarray);
-                page++;                
+                citiesArray = await this.fetchCities(`${this.props.openAPIEndpoint.fullURL}page=${page}`, temporaryArray);
+                page++;                              
             }
-            while(cityarray.length < 10 && await this.fetchCities(`${this.props.openAPIEndpoint.fullURL}page=${page}`, cityarray));
-
-            
-           
+            while(citiesArray.length < 10);           
+            citiesArray.forEach((city)=>{
+                this.fetchDescribtionFromWikipedia(city)
+            })           
         }
     }
     verifyForm(){
@@ -62,7 +85,6 @@ export default class CitiesForm extends React.Component{
             errors.push("c")      
             message = message +"<div>"+ this.verify("parameter") +"<div />"
         }
-
         document.querySelector(".errors").innerHTML = message;        
         if (errors.length == 0)
             return true
@@ -78,7 +100,7 @@ export default class CitiesForm extends React.Component{
     }   
    
     render(){  
-        //console.log(this.props.openAPIEndpoint) 
+        //console.log(this.props.cities) 
         return(            
             <form onSubmit={()=>this.fetchData(event)} autoComplete="off">
                 <section class="errors" style={{color:"red"}}></section>

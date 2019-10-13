@@ -17,7 +17,7 @@ export function getLabelForCountry(country){
             return ""
     } 
 };
-export default function nameIsEqualPattern(name,pattern){
+export function nameIsEqualPattern(name,pattern){
     let nameLowercase = name.toLowerCase();
     let patternLowercase = pattern.toLowerCase();   
     if(nameLowercase==patternLowercase)
@@ -33,6 +33,14 @@ export function arrayContainValue(array,name){
         }
     });       
     return bool       
+}
+export function copyFromArrayIfNotDuplicated(arrayToCopy,arrayToReturn){
+    arrayToCopy.some(city=>{
+        if(!arrayContainValue(arrayToReturn,city.city) && (arrayToReturn.length < 10))
+            arrayToReturn.push(city.city) 
+            //console.log(city.city)  
+    })
+    return arrayToReturn
 }
 
 

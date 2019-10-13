@@ -2,7 +2,7 @@ import  { getLabelForCountry }  from "../../assets/functions"
 getLabelForCountry("poland");
 
 const initialEndPoint = {
-  base :"https://api.openaq.org/v1/measurements?limit=10&",
+  base :"https://api.openaq.org/v1/measurements?limit=110&",
   order_by : "order_by=value&",
   sort_order : "sort=desc&",
   country: "",
@@ -34,5 +34,3 @@ export default function(state = initialEndPoint, action) {
       return {...state};
   }
 }
-
-  //https://api.openaq.org/v1/measurements?order_by=value&sort=desc&country=PL&parameter=co2&
