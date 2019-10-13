@@ -19,8 +19,7 @@ export default class CitiesForm extends React.Component{
     constructor(){
         super()          
     }
-    async fetchCities(URL,arrayToReturn){
-        console.log(URL)
+    async fetchCities(URL,arrayToReturn){      
         try {let res = await axios.get(URL)            
                 if(res.status == 200 && res.data.meta.found !== 0){ 
                     arrayToReturn = copyFromArrayIfNotDuplicated(res.data.results,arrayToReturn)                 
@@ -55,8 +54,7 @@ export default class CitiesForm extends React.Component{
             describtion:describtion,
         }       
         await this.props.dispatch(addCity(payload));
-        
-        //console.log(this.props.cities.citiesArray)
+       
     }
 
     async fetchData(event){                
@@ -106,8 +104,7 @@ export default class CitiesForm extends React.Component{
         }
     }   
    
-    render(){  
-        //console.log(this.props.cities) 
+    render(){         
         return(            
             <form onSubmit={()=>this.fetchData(event)} autoComplete="off">
                 <section class="errors" style={{color:"red"}}></section>
