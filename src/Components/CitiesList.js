@@ -12,8 +12,7 @@ export default class CitiesList extends React.Component{
         super()
     }
     toggleVisibility(e){        
-        let height = e.target.nextSibling.style.maxHeight;
-        console.log(height)
+        let height = e.target.nextSibling.style.maxHeight;        
         if(height == "1222px"){
             e.target.nextSibling.style.maxHeight="0px";
         }       

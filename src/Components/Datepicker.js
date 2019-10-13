@@ -16,13 +16,11 @@ export default class DatePicker extends React.Component{
     constructor(){
         super()
     }
-    setStore(event){
-        //console.log(event.target.value);
+    setStore(event){        
         this.props.dispatch(setDate(this.props.period,event.target.value))
     }
     render(){
-        let period = "date_" + this.props.period;
-        //console.log("data",this.props.date)
+        let period = "date_" + this.props.period;        
         return(
             <section class={period}>Pick period of time
                 <label >
