@@ -12,12 +12,11 @@ export default class Layout extends React.Component{
             matchingCountries : ""
         }
     }
-    componentDidMount (){
-        this.setState({loaded : true})
+    componentDidMount(){
+        this.setState({loaded : true});
     }
     
-    render(){
-        console.log(this.state.loaded, Date.now())
+    render(){        
         let Content;
         if (this.state.loaded){
             Content = <div class="Page"><CitiesForm /> <CitiesList /></div>  

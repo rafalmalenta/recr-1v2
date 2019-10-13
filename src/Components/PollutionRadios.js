@@ -1,9 +1,29 @@
 import React from "react";
+import {connect} from "react-redux";
+import { setParameterState } from "../redux/actions/openAPIActions";
 
-
+@connect((store)=>{
+    return{
+        parameter: store.openAPIEndpoint.parameter
+    }
+})
 export default class PollutionRadios extends React.Component{
     constructor(){
         super()
+    }
+    componentDidMount(){
+        let radios = document.querySelectorAll("input[name=pollution]");
+        radios.forEach((radio)=>{
+            radio.addEventListener("click",(event)=>{
+                this.props.dispatch(setParameterState(event.target.value))
+            })
+        })
+    }
+    componentWillUnmount(){
+        let radios = document.querySelectorAll("input[name=pollution]");
+        radios.forEach((radio)=>{
+            radio.removeEventListener("click");
+        })
     }
     render(){
         return(
@@ -12,7 +32,7 @@ export default class PollutionRadios extends React.Component{
                 <div class="radioWrapper">
                     <div class="row">
                         <input id="o3" type="radio" name="pollution" value="o3" /><label for="o3">o3</label>
-                        <input id="co2" type="radio" name="pollution" value="co" /> <label for="co2">co2</label>
+                        <input id="co" type="radio" name="pollution" value="co" /> <label for="co">co</label>
                         <input id="no2" type="radio" name="pollution" value="no2" /><label for="no2">no2</label> 
                     </div>
                     <div class="row">
