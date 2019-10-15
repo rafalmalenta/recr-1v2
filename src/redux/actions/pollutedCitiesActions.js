@@ -4,7 +4,7 @@ export function addCity(value){
         payload: value
     }
 }
-export function resetCity(){
+export function resetCity(){   
     return{
         type: "resetCity",
         payload: ""

@@ -23,6 +23,7 @@ export default class CitiesList extends React.Component{
     }
     render(){        
         let display
+        //console.log("sa",this.props.cities.citiesArray)
         if(this.props.cities.loading == true){
             display=<div>Loading</div>
         }

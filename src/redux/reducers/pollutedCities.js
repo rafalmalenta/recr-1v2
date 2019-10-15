@@ -1,3 +1,4 @@
+import { async } from "q";
 
 const initial ={
   loading:false,
@@ -14,7 +15,7 @@ export default function(state = initial, action) {
       return { ...state, citiesArray:newArray }
     }
     case "resetCity":{
-      return {...state, citiesArray:[]}
+        return {...state, citiesArray:[]}      
     }
     case "loading":{
       return {...state, loading:true}      

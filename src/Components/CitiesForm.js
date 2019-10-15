@@ -7,6 +7,7 @@ import axios from "axios"
 import { getURL } from "../redux/actions/openAPIActions";
 import { arrayContainValue, copyFromArrayIfNotDuplicated } from "../assets/functions";
 import { addCity,resetCity,loaded,loading } from "../redux/actions/pollutedCitiesActions";
+import { async } from "q";
 
 
 @connect((store)=>{
@@ -25,13 +26,12 @@ export default class CitiesForm extends React.Component{
                     arrayToReturn = copyFromArrayIfNotDuplicated(res.data.results,arrayToReturn)                 
                 }
                 else throw "failed to load resource"
-            return await arrayToReturn;          
+            return arrayToReturn;          
         }
-        catch(e){return await false}
+        catch(e){return false}
         finally{}   
     }
-    async fetchDescribtionFromWikipedia(city){   
-        await this.props.dispatch(resetCity());         
+    async fetchDescribtionFromWikipedia(city){               
         let response = await axios({
             type: "GET",   
             params: { 
@@ -46,7 +46,7 @@ export default class CitiesForm extends React.Component{
         var pageID = Object.keys(singleResponse)[0];
         var describtion = singleResponse[pageID]["extract"];
         if(describtion){
-            describtion=describtion
+            describtion = describtion
         }
         else
             describtion="no records found on wikipedia"
@@ -57,29 +57,42 @@ export default class CitiesForm extends React.Component{
         await this.props.dispatch(addCity(payload));      
     }
 
-    async fetchData(event){                
+    async fetchData(event){  
+        console.log("started")              
         event.preventDefault();  
-        this.props.dispatch(resetCity());
-        this.props.dispatch(loading());
-
+        await this.props.dispatch(resetCity());
+        
+        //
         let temporaryArray = [];
-        console.log(temporaryArray)
+        
         let citiesArray; 
         let page = 1;      
-        console.log()   
-        if(this.verifyForm()&&this.props.cities.loading==false){
+         
+        if((this.verifyForm())&& (this.props.cities.loading==false)){
+            console.log("loading?",this.props.cities.loading,"array",this.props.cities.citiesArray ) 
+            await this.props.dispatch(loading());            
             await this.props.dispatch(getURL());
             //loop incase 1request didnt contain 10 unique citis
             do{
+               // console.log("iddddddddddddddddd")
                 citiesArray = await this.fetchCities(`${this.props.openAPIEndpoint.fullURL}page=${page}`, temporaryArray);
                 page++;                              
             }            
             while(citiesArray.length < 10);            
-            citiesArray.forEach((city)=>{
-                this.fetchDescribtionFromWikipedia(city)
-            })
-            this.props.dispatch(loaded())           
-        }
+        
+            await citiesArray.forEach(async(city,index)=>{                              
+                await this.fetchDescribtionFromWikipedia(city)
+                //console.log("zaaaaaaaaaaasdssadsad") 
+                if(index >= 9){
+                    await this.props.dispatch(loaded())  
+                }                 
+            })                   
+            
+        }   
+                 
+            //await this.props.dispatch(loaded())           
+        
+        //console.log("loading",this.props.cities.loading,"array",this.props.cities.citiesArray ) 
     }
     verifyForm(){
         let message=""; 
