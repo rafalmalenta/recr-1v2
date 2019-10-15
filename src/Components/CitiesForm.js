@@ -30,7 +30,8 @@ export default class CitiesForm extends React.Component{
         catch(e){return await false}
         finally{}   
     }
-    async fetchDescribtionFromWikipedia(city){        
+    async fetchDescribtionFromWikipedia(city){   
+        await this.props.dispatch(resetCity());         
         let response = await axios({
             type: "GET",   
             params: { 
@@ -53,8 +54,7 @@ export default class CitiesForm extends React.Component{
             header:city,
             describtion:describtion,
         }       
-        await this.props.dispatch(addCity(payload));
-       
+        await this.props.dispatch(addCity(payload));      
     }
 
     async fetchData(event){                
@@ -62,17 +62,19 @@ export default class CitiesForm extends React.Component{
         this.props.dispatch(resetCity());
         this.props.dispatch(loading());
 
-        let temporaryArray = []; 
+        let temporaryArray = [];
+        console.log(temporaryArray)
         let citiesArray; 
-        let page = 1;         
-        if(this.verifyForm()){
+        let page = 1;      
+        console.log()   
+        if(this.verifyForm()&&this.props.cities.loading==false){
             await this.props.dispatch(getURL());
             //loop incase 1request didnt contain 10 unique citis
             do{
                 citiesArray = await this.fetchCities(`${this.props.openAPIEndpoint.fullURL}page=${page}`, temporaryArray);
                 page++;                              
-            }
-            while(citiesArray.length < 10);           
+            }            
+            while(citiesArray.length < 10);            
             citiesArray.forEach((city)=>{
                 this.fetchDescribtionFromWikipedia(city)
             })

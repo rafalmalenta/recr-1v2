@@ -1,7 +1,7 @@
 
 const initial ={
-  loading:"ds",
-  loading:"as",
+  loading:false,
+  loaded:false,
   citiesArray:[],
 };
   
