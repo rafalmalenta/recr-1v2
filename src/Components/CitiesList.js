@@ -28,6 +28,7 @@ export default class CitiesList extends React.Component{
             display=<div>Loading</div>
         }
         else if(this.props.cities.loaded == true){
+            if(this.props.cities.citiesArray){
             display=this.props.cities.citiesArray.map((city,index)=>
 
                 <section class="accordion" key={index}>
@@ -37,7 +38,13 @@ export default class CitiesList extends React.Component{
                 </div>
                 </section>
             )
-        }
+            }
+            else {
+                display=<div>Something wron happened</div>
+            }
+        }       
+
+        
         return(
             <div>
                 {display}

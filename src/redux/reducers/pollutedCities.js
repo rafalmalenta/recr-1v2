@@ -3,6 +3,7 @@ import { async } from "q";
 const initial ={
   loading:false,
   loaded:false,
+  //error:"",
   citiesArray:[],
 };
   
@@ -22,6 +23,9 @@ export default function(state = initial, action) {
     }
     case "loaded":{
       return {...state, loading:false, loaded:true}      
+    }
+    case "error":{
+      return {...state, citiesArray:false}      
     }
     default:
       return state;

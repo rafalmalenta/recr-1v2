@@ -22,3 +22,9 @@ export function loaded(){
         payload: ""
     }
 }
+export function dispatchError(){
+    return{
+        type: `error`,
+        payload: ""
+    }
+}

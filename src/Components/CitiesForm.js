@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import axios from "axios"
 import { getURL } from "../redux/actions/openAPIActions";
 import { arrayContainValue, copyFromArrayIfNotDuplicated } from "../assets/functions";
-import { addCity,resetCity,loaded,loading } from "../redux/actions/pollutedCitiesActions";
+import { addCity,resetCity,loaded,loading,dispatchError } from "../redux/actions/pollutedCitiesActions";
 import { async } from "q";
 
 
@@ -30,7 +30,7 @@ export default class CitiesForm extends React.Component{
         }
         catch(e){return false}
         finally{}   
-    }
+    }    
     async fetchDescribtionFromWikipedia(city){               
         let response = await axios({
             type: "GET",   
@@ -56,54 +56,50 @@ export default class CitiesForm extends React.Component{
         }       
         await this.props.dispatch(addCity(payload));      
     }
-
-    async fetchData(event){  
-        console.log("started")              
-        event.preventDefault();  
-        await this.props.dispatch(resetCity());
-        
-        //
-        let temporaryArray = [];
-        
+    async forEachFetch(array){
+        await array.forEach(async(city,index)=>{                              
+            await this.fetchDescribtionFromWikipedia(city)
+            //workaround need improve this oneday            
+            if(index >= 9){
+                return await this.props.dispatch(loaded()) 
+            }             
+        })  
+    }
+    async fetchData(event){               
+        event.preventDefault();          
+        let temporaryArray = [];        
         let citiesArray; 
         let page = 1;      
          
-        if((this.verifyForm())&& (this.props.cities.loading==false)){
-            console.log("loading?",this.props.cities.loading,"array",this.props.cities.citiesArray ) 
+        if((this.verifyForm()) && (this.props.cities.loading == false)){
+            await this.props.dispatch(resetCity());            
             await this.props.dispatch(loading());            
             await this.props.dispatch(getURL());
             //loop incase 1request didnt contain 10 unique citis
-            do{
-               // console.log("iddddddddddddddddd")
+            do{              
                 citiesArray = await this.fetchCities(`${this.props.openAPIEndpoint.fullURL}page=${page}`, temporaryArray);
                 page++;                              
             }            
             while(citiesArray.length < 10);            
-        
-            await citiesArray.forEach(async(city,index)=>{                              
-                await this.fetchDescribtionFromWikipedia(city)
-                //console.log("zaaaaaaaaaaasdssadsad") 
-                if(index >= 9){
-                    await this.props.dispatch(loaded())  
-                }                 
-            })                   
-            
-        }   
-                 
-            //await this.props.dispatch(loaded())           
-        
-        //console.log("loading",this.props.cities.loading,"array",this.props.cities.citiesArray ) 
+            if(await this.fetchCities(`${this.props.openAPIEndpoint.fullURL}page=${page}`, temporaryArray)){ 
+                await this.forEachFetch.call(this,citiesArray)
+            } 
+            else{                
+                await this.props.dispatch(loaded()) 
+                await this.props.dispatch(dispatchError());
+            } 
+        }          
     }
     verifyForm(){
         let message=""; 
         let errors =[];     
-        if(this.verify("country") != "" && (this.verify("country") !== true) ){
+        if(!this.verify("country") ){
             errors.push("c")      
-            message = "<div>"+ this.verify("country") +"<div />"
+            message = "<div>please pick country <div />"
         }
-        if(this.verify("parameter") != "" && (this.verify("parameter") !== true) ){          
+        if(!this.verify("parameter") ){          
             errors.push("c")      
-            message = message +"<div>"+ this.verify("parameter") +"<div />"
+            message = message +"<div>please pick parameter <div />"
         }
         document.querySelector(".errors").innerHTML = message;        
         if (errors.length == 0)
@@ -115,7 +111,7 @@ export default class CitiesForm extends React.Component{
             return true
         }
         else {         
-            return `please pick ${value}`        
+            return false       
         }
     }   
    

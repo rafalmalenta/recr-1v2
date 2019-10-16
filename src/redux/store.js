@@ -8,4 +8,4 @@ const logger = createLogger({
   });
   const middleware = applyMiddleware(logger)
 
-export default createStore(rootReducer,middleware);
+export default createStore(rootReducer);
